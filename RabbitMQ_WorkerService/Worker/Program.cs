@@ -1,10 +1,17 @@
 using Worker;
 
-IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
+public class Program
+{
+    public static void Main(string[] args)
     {
-        services.AddHostedService<Worker>();
-    })
-    .Build();
-
-await host.RunAsync();
+        CreateHostBuilder(args).Build().Run();
+    }
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+     Host.CreateDefaultBuilder(args)
+     .UseWindowsService()
+     .ConfigureServices((hostContext, services) =>
+     {
+         services.RegisterDependency();
+         services.AddHostedService<WorkerRun>();
+     });
+}
